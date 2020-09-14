@@ -16,6 +16,15 @@ public class UserService {
         userRepository.registerUser(newUser);
     }
 
+    //method to validate password against strong password condition
+    public boolean checkPasswordValidity(String password) {
+
+        //regex for password containing atleast  one alphabet, one number and one special character
+        String strongPassowrdCondition = "^(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[^0-9A-z]).*$";
+
+        return password.matches(strongPassowrdCondition);
+    }
+
     //Since we did not have any user in the database, therefore the user with username 'upgrad' and password 'password' was hard-coded
     //This method returned true if the username was 'upgrad' and password is 'password'
     //But now let us change the implementation of this method

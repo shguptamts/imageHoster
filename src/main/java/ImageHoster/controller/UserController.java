@@ -40,9 +40,25 @@ public class UserController {
     //This controller method is called when the request pattern is of type 'users/registration' and also the incoming request is of POST type
     //This method calls the business logic and after the user record is persisted in the database, directs to login page
     @RequestMapping(value = "users/registration", method = RequestMethod.POST)
-    public String registerUser(User user) {
-        userService.registerUser(user);
-        return "redirect:/users/login";
+    public String registerUser(User user, Model model) {
+        String error = "Password must contain at least 1 alphabet, 1 number & 1 special character";
+
+        boolean isPassowrdStrong = userService.checkPasswordValidity(user.getPassword());
+
+        //if password is strong, register user
+        //if not, then redirect user to registration page and add notification for password validity
+        if(isPassowrdStrong){
+            userService.registerUser(user);
+            return "redirect:/users/login";
+        }else{
+            User registerUser = new User();
+            UserProfile profile = new UserProfile();
+            registerUser.setProfile(profile);
+            model.addAttribute("User",registerUser);
+            model.addAttribute("passwordTypeError",error);
+            return "/users/registration";
+        }
+
     }
 
     //This controller method is called when the request pattern is of type 'users/login'
