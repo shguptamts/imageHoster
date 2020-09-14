@@ -96,6 +96,7 @@ public class ImageController {
     //This string is then displayed by 'edit.html' file as previous tags of an image
     @RequestMapping(value = "/editImage")
     public String editImage(@RequestParam("imageId") Integer imageId, Model model, HttpSession session) {
+        String error = "Only the owner of the image can edit the image";
         Image image = imageService.getImage(imageId);
 
         //get current logged in user
@@ -112,7 +113,7 @@ public class ImageController {
             model.addAttribute("tags", tags);
             return "images/edit";
         }else{
-            model.addAttribute("editError", true);
+            model.addAttribute("editError", error);
             model.addAttribute("tags", image.getTags());
             model.addAttribute("comments", image.getComments());
             return "images/image";
@@ -159,6 +160,8 @@ public class ImageController {
     //Looks for a controller method with request mapping of type '/images'
     @RequestMapping(value = "/deleteImage", method = RequestMethod.DELETE)
     public String deleteImageSubmit(@RequestParam(name = "imageId") Integer imageId, HttpSession session, Model model) {
+
+        String error =  "Only the owner of the image can delete the image";
         Image image = imageService.getImage(imageId);
 
         //get current logged in user
@@ -172,7 +175,7 @@ public class ImageController {
             return "redirect:/images";
         }else{
             model.addAttribute("image", image);
-            model.addAttribute("deleteError", true);
+            model.addAttribute("deleteError", error);
             model.addAttribute("tags", image.getTags());
             model.addAttribute("comments", image.getComments());
             return "images/image";
